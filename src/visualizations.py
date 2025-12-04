@@ -34,7 +34,6 @@ LAYOUT_TEMPLATE = {
     'paper_bgcolor': COLORS['bg_card'],
     'plot_bgcolor': COLORS['bg_card'],
     'font': {'family': 'Inter, SF Pro Display, -apple-system, sans-serif', 'color': COLORS['text_primary']},
-    'title': {'font': {'size': 16, 'color': COLORS['text_primary']}},
     'xaxis': {
         'gridcolor': COLORS['grid'],
         'zerolinecolor': COLORS['grid'],
@@ -55,7 +54,7 @@ def apply_layout(fig: go.Figure, title: str = "", height: int = 400) -> go.Figur
     """Apply professional layout to figure"""
     fig.update_layout(
         **LAYOUT_TEMPLATE,
-        title=title,
+        title=dict(text=title, font=dict(size=16, color=COLORS['text_primary'])),
         height=height,
         showlegend=True,
         legend=dict(

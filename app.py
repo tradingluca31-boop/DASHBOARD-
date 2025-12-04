@@ -1,8 +1,8 @@
 """
 MQL5 TRADING ANALYTICS DASHBOARD
-Professional Wall Street Grade Analysis Platform
+Plateforme d'Analyse Professionnelle Wall Street
 
-Run with: streamlit run app.py
+Lancer avec: streamlit run app.py
 """
 
 import streamlit as st
@@ -308,25 +308,25 @@ def main():
     # Sidebar
     with st.sidebar:
         st.markdown('<p class="logo-text">MQL5 ANALYTICS</p>', unsafe_allow_html=True)
-        st.markdown("**Professional Trading Dashboard**")
+        st.markdown("**Dashboard de Trading Professionnel**")
         st.markdown("---")
 
         # File upload
-        st.markdown("### 📁 Data Source")
+        st.markdown("### 📁 Source de Données")
         uploaded_file = st.file_uploader(
-            "Upload your trades CSV",
+            "Importez votre CSV de trades",
             type=['csv', 'txt'],
-            help="Export your trades from MT4/MT5 as CSV"
+            help="Exportez vos trades depuis MT4/MT5 en CSV"
         )
 
-        use_sample = st.checkbox("Use sample data for demo", value=uploaded_file is None)
+        use_sample = st.checkbox("Utiliser les données de démonstration", value=uploaded_file is None)
 
         st.markdown("---")
 
         # Settings
-        st.markdown("### ⚙️ Settings")
+        st.markdown("### ⚙️ Paramètres")
         initial_balance = st.number_input(
-            "Initial Balance ($)",
+            "Capital Initial ($)",
             min_value=100,
             max_value=10000000,
             value=10000,
@@ -334,7 +334,7 @@ def main():
         )
 
         risk_free_rate = st.slider(
-            "Risk-Free Rate (%)",
+            "Taux Sans Risque (%)",
             min_value=0.0,
             max_value=10.0,
             value=5.0,
@@ -342,7 +342,7 @@ def main():
         ) / 100
 
         monte_carlo_sims = st.select_slider(
-            "Monte Carlo Simulations",
+            "Simulations Monte Carlo",
             options=[100, 500, 1000, 5000, 10000],
             value=1000
         )
@@ -350,21 +350,21 @@ def main():
         st.markdown("---")
         st.markdown("""
         <div style="color: #6b7280; font-size: 0.75rem;">
-        <strong>Pro Tips:</strong><br>
-        • Export trades from MT4/MT5 history<br>
-        • Include all columns for best analysis<br>
-        • Minimum 30 trades recommended
+        <strong>Conseils Pro:</strong><br>
+        • Exportez les trades depuis l'historique MT4/MT5<br>
+        • Incluez toutes les colonnes pour une meilleure analyse<br>
+        • Minimum 30 trades recommandé
         </div>
         """, unsafe_allow_html=True)
 
     # Main content
-    st.markdown("# 📊 Trading Performance Analytics")
-    st.markdown("*Institutional-grade analysis for your MQL5 Expert Advisor*")
+    st.markdown("# 📊 Analyse de Performance Trading")
+    st.markdown("*Analyse de niveau institutionnel pour votre Expert Advisor MQL5*")
 
     # Load data
     if use_sample or uploaded_file is None:
         df = create_sample_data(150)
-        st.info("📌 Using sample data. Upload your CSV for real analysis.")
+        st.info("📌 Données de démonstration utilisées. Importez votre CSV pour une analyse réelle.")
     else:
         try:
             loader = MQL5DataLoader()
@@ -373,7 +373,7 @@ def main():
             for w in warnings:
                 st.warning(w)
         except Exception as e:
-            st.error(f"Error loading file: {str(e)}")
+            st.error(f"Erreur lors du chargement: {str(e)}")
             st.stop()
 
     # Calculate metrics
@@ -388,7 +388,7 @@ def main():
     symbol_analyzer = SymbolAnalyzer(df)
 
     # ===== OVERVIEW SECTION =====
-    st.markdown("## 💎 Performance Overview")
+    st.markdown("## 💎 Vue d'Ensemble des Performances")
 
     # Top metrics row
     col1, col2, col3, col4, col5 = st.columns(5)
@@ -396,7 +396,7 @@ def main():
     with col1:
         net_pnl = metrics['net_profit']
         st.metric(
-            "Net P/L",
+            "Profit Net",
             format_currency(net_pnl),
             f"{metrics['total_return_pct']:+.2f}%",
             delta_color="normal"
@@ -404,28 +404,28 @@ def main():
 
     with col2:
         st.metric(
-            "Win Rate",
+            "Taux de Réussite",
             f"{metrics['win_rate']:.1f}%",
-            f"{metrics['winning_trades']}W / {metrics['losing_trades']}L"
+            f"{metrics['winning_trades']}G / {metrics['losing_trades']}P"
         )
 
     with col3:
         st.metric(
             "Profit Factor",
             f"{metrics['profit_factor']:.2f}",
-            "Good" if metrics['profit_factor'] > 1.5 else "Needs work"
+            "Bon" if metrics['profit_factor'] > 1.5 else "À améliorer"
         )
 
     with col4:
         st.metric(
-            "Sharpe Ratio",
+            "Ratio de Sharpe",
             f"{metrics['sharpe_ratio']:.2f}",
-            "Excellent" if metrics['sharpe_ratio'] > 2 else "Good" if metrics['sharpe_ratio'] > 1 else "Low"
+            "Excellent" if metrics['sharpe_ratio'] > 2 else "Bon" if metrics['sharpe_ratio'] > 1 else "Faible"
         )
 
     with col5:
         st.metric(
-            "Max Drawdown",
+            "Drawdown Max",
             f"{metrics['max_drawdown_pct']:.2f}%",
             f"{metrics['max_drawdown_duration']} trades"
         )
@@ -434,15 +434,15 @@ def main():
     col1, col2, col3, col4, col5, col6 = st.columns(6)
 
     with col1:
-        st.metric("Sortino Ratio", f"{metrics['sortino_ratio']:.2f}")
+        st.metric("Ratio Sortino", f"{metrics['sortino_ratio']:.2f}")
     with col2:
-        st.metric("Calmar Ratio", f"{metrics['calmar_ratio']:.2f}")
+        st.metric("Ratio Calmar", f"{metrics['calmar_ratio']:.2f}")
     with col3:
-        st.metric("Expectancy", format_currency(metrics['expectancy']))
+        st.metric("Espérance", format_currency(metrics['expectancy']))
     with col4:
-        st.metric("Avg R:R", f"{metrics['avg_rr_ratio']:.2f}")
+        st.metric("R:R Moyen", f"{metrics['avg_rr_ratio']:.2f}")
     with col5:
-        st.metric("Recovery Factor", f"{metrics['recovery_factor']:.2f}")
+        st.metric("Facteur Récup.", f"{metrics['recovery_factor']:.2f}")
     with col6:
         st.metric("Kelly %", f"{metrics['kelly_criterion']*100:.1f}%")
 
@@ -450,12 +450,12 @@ def main():
 
     # ===== CHARTS SECTION =====
     tabs = st.tabs([
-        "📈 Equity & Drawdown",
-        "📊 Performance Analysis",
-        "⏰ Time Analysis",
-        "💱 Symbol Analysis",
+        "📈 Équité & Drawdown",
+        "📊 Analyse Performance",
+        "⏰ Analyse Temporelle",
+        "💱 Analyse par Symbole",
         "🎲 Monte Carlo",
-        "📋 Trade Log"
+        "📋 Historique Trades"
     ])
 
     # Tab 1: Equity & Drawdown
@@ -482,24 +482,24 @@ def main():
         st.plotly_chart(create_rolling_metrics(df), use_container_width=True)
 
         # Risk metrics detail
-        st.markdown("### 📊 Detailed Risk Metrics")
+        st.markdown("### 📊 Métriques de Risque Détaillées")
         risk_col1, risk_col2, risk_col3, risk_col4 = st.columns(4)
 
         with risk_col1:
             st.metric("VaR (95%)", f"{metrics['var_95']:.2f}%")
-            st.metric("Skewness", f"{metrics['skewness']:.2f}")
+            st.metric("Asymétrie", f"{metrics['skewness']:.2f}")
 
         with risk_col2:
             st.metric("CVaR (95%)", f"{metrics['cvar_95']:.2f}%")
             st.metric("Kurtosis", f"{metrics['kurtosis']:.2f}")
 
         with risk_col3:
-            st.metric("Ulcer Index", f"{metrics['ulcer_index']:.2f}")
-            st.metric("Tail Ratio", f"{metrics['tail_ratio']:.2f}")
+            st.metric("Indice Ulcer", f"{metrics['ulcer_index']:.2f}")
+            st.metric("Ratio Queue", f"{metrics['tail_ratio']:.2f}")
 
         with risk_col4:
-            st.metric("Omega Ratio", f"{metrics['omega_ratio']:.2f}")
-            st.metric("Gain to Pain", f"{metrics['gain_to_pain']:.2f}")
+            st.metric("Ratio Omega", f"{metrics['omega_ratio']:.2f}")
+            st.metric("Gain/Douleur", f"{metrics['gain_to_pain']:.2f}")
 
     # Tab 3: Time Analysis
     with tabs[2]:
@@ -508,7 +508,7 @@ def main():
         col1, col2 = st.columns(2)
 
         with col1:
-            st.markdown("### 📅 Daily Performance")
+            st.markdown("### 📅 Performance par Jour")
             daily_perf = time_analyzer.get_daily_performance()
             if not daily_perf.empty:
                 st.dataframe(
@@ -522,7 +522,7 @@ def main():
                 )
 
         with col2:
-            st.markdown("### 📊 Hourly Performance")
+            st.markdown("### 📊 Performance par Heure")
             hourly_perf = time_analyzer.get_hourly_performance()
             if not hourly_perf.empty:
                 st.dataframe(
@@ -552,7 +552,7 @@ def main():
             with col2:
                 st.plotly_chart(create_risk_reward_scatter(df), use_container_width=True)
 
-            st.markdown("### 💰 Symbol Statistics")
+            st.markdown("### 💰 Statistiques par Symbole")
             symbol_stats = symbol_analyzer.get_symbol_performance()
             if not symbol_stats.empty:
                 st.dataframe(
@@ -567,18 +567,18 @@ def main():
                     use_container_width=True
                 )
         else:
-            st.warning("No symbol data available in your CSV. Add a 'symbol' column for symbol analysis.")
+            st.warning("Aucune donnée de symbole disponible dans votre CSV. Ajoutez une colonne 'symbol' pour cette analyse.")
 
     # Tab 5: Monte Carlo
     with tabs[4]:
-        st.markdown("### 🎲 Monte Carlo Simulation")
+        st.markdown("### 🎲 Simulation Monte Carlo")
         st.markdown("""
-        Monte Carlo simulation tests the robustness of your strategy by randomly reordering trades
-        to see the range of possible outcomes. This helps understand the role of luck vs skill.
+        La simulation Monte Carlo teste la robustesse de votre stratégie en réordonnant aléatoirement les trades
+        pour voir la gamme des résultats possibles. Cela aide à comprendre le rôle de la chance vs la compétence.
         """)
 
-        if st.button("Run Monte Carlo Simulation", type="primary"):
-            with st.spinner(f"Running {monte_carlo_sims:,} simulations..."):
+        if st.button("Lancer la Simulation Monte Carlo", type="primary"):
+            with st.spinner(f"Exécution de {monte_carlo_sims:,} simulations..."):
                 mc_simulator = MonteCarloSimulator(df['profit'], initial_balance)
                 mc_results = mc_simulator.run_simulation(n_simulations=monte_carlo_sims)
 
@@ -588,75 +588,75 @@ def main():
 
                 with col1:
                     st.metric(
-                        "Median Final Equity",
+                        "Équité Finale Médiane",
                         format_currency(mc_results['median_final_equity'])
                     )
                 with col2:
                     st.metric(
-                        "5th Percentile",
+                        "5ème Percentile",
                         format_currency(mc_results['equity_5th_percentile']),
-                        "Worst case scenario"
+                        "Pire scénario"
                     )
                 with col3:
                     st.metric(
-                        "95th Percentile",
+                        "95ème Percentile",
                         format_currency(mc_results['equity_95th_percentile']),
-                        "Best case scenario"
+                        "Meilleur scénario"
                     )
                 with col4:
                     st.metric(
-                        "Probability of Profit",
+                        "Probabilité de Profit",
                         f"{mc_results['probability_of_profit']:.1f}%"
                     )
 
                 col1, col2 = st.columns(2)
                 with col1:
                     st.metric(
-                        "Median Max Drawdown",
+                        "Drawdown Max Médian",
                         f"{mc_results['median_max_dd']:.2f}%"
                     )
                 with col2:
                     st.metric(
-                        "95th %ile Max DD",
+                        "DD Max 95ème %ile",
                         f"{mc_results['max_dd_95th_percentile']:.2f}%",
-                        "Worst expected drawdown"
+                        "Pire drawdown attendu"
                     )
 
                 if mc_results['probability_of_ruin'] > 0:
-                    st.error(f"⚠️ Probability of Ruin (losing 50%+): {mc_results['probability_of_ruin']:.1f}%")
+                    st.error(f"⚠️ Probabilité de Ruine (perte 50%+): {mc_results['probability_of_ruin']:.1f}%")
 
     # Tab 6: Trade Log
     with tabs[5]:
-        st.markdown("### 📋 Trade History")
+        st.markdown("### 📋 Historique des Trades")
 
         # Filters
         col1, col2, col3 = st.columns(3)
 
         with col1:
             if 'symbol' in df.columns:
-                symbols = ['All'] + list(df['symbol'].unique())
-                selected_symbol = st.selectbox("Filter by Symbol", symbols)
+                symbols = ['Tous'] + list(df['symbol'].unique())
+                selected_symbol = st.selectbox("Filtrer par Symbole", symbols)
 
         with col2:
             if 'type' in df.columns:
-                types = ['All'] + list(df['type'].unique())
-                selected_type = st.selectbox("Filter by Type", types)
+                types = ['Tous'] + list(df['type'].unique())
+                selected_type = st.selectbox("Filtrer par Type", types)
 
         with col3:
-            profit_filter = st.selectbox("Filter by Result", ['All', 'Winners', 'Losers'])
+            profit_filter = st.selectbox("Filtrer par Résultat", ['Tous', 'Gagnants', 'Perdants'])
 
         # Apply filters
         filtered_df = df.copy()
 
-        if 'symbol' in df.columns and selected_symbol != 'All':
+        if 'symbol' in df.columns and selected_symbol != 'Tous':
             filtered_df = filtered_df[filtered_df['symbol'] == selected_symbol]
 
-        if 'type' in df.columns and selected_type != 'All':
+        if 'type' in df.columns and selected_type != 'Tous':
             filtered_df = filtered_df[filtered_df['type'] == selected_type]
 
-        if profit_filter == 'Winners':
+        if profit_filter == 'Gagnants':
             filtered_df = filtered_df[filtered_df['profit'] > 0]
-        elif profit_filter == 'Losers':
+        elif profit_filter == 'Perdants':
             filtered_df = filtered_df[filtered_df['profit'] < 0]
 
         # Display columns
@@ -677,11 +677,11 @@ def main():
             height=500
         )
 
-        st.markdown(f"*Showing {min(100, len(filtered_df))} of {len(filtered_df)} trades*")
+        st.markdown(f"*Affichage de {min(100, len(filtered_df))} sur {len(filtered_df)} trades*")
 
     # ===== RECOMMENDATIONS SECTION =====
     st.markdown("---")
-    st.markdown("## 🎯 EA Optimization Recommendations")
+    st.markdown("## 🎯 Recommandations d'Optimisation EA")
 
     recommendations = []
 
@@ -689,54 +689,54 @@ def main():
     if metrics['win_rate'] < 40:
         recommendations.append({
             'type': 'warning',
-            'title': 'Low Win Rate',
-            'text': f"Your win rate ({metrics['win_rate']:.1f}%) is below 40%. Consider tightening entry criteria or reviewing your signal logic."
+            'title': 'Taux de Réussite Faible',
+            'text': f"Votre taux de réussite ({metrics['win_rate']:.1f}%) est inférieur à 40%. Envisagez de resserrer les critères d'entrée ou de revoir votre logique de signal."
         })
     elif metrics['win_rate'] > 70:
         recommendations.append({
             'type': 'info',
-            'title': 'High Win Rate',
-            'text': f"Excellent win rate ({metrics['win_rate']:.1f}%)! Ensure your R:R ratio ({metrics['avg_rr_ratio']:.2f}) supports long-term profitability."
+            'title': 'Taux de Réussite Élevé',
+            'text': f"Excellent taux de réussite ({metrics['win_rate']:.1f}%)! Assurez-vous que votre ratio R:R ({metrics['avg_rr_ratio']:.2f}) soutient la rentabilité à long terme."
         })
 
     # Profit factor analysis
     if metrics['profit_factor'] < 1.2:
         recommendations.append({
             'type': 'error',
-            'title': 'Low Profit Factor',
-            'text': f"Profit factor ({metrics['profit_factor']:.2f}) is concerning. Target minimum 1.5 for robust strategies."
+            'title': 'Profit Factor Faible',
+            'text': f"Le profit factor ({metrics['profit_factor']:.2f}) est préoccupant. Visez minimum 1.5 pour des stratégies robustes."
         })
 
     # Drawdown analysis
     if abs(metrics['max_drawdown_pct']) > 20:
         recommendations.append({
             'type': 'warning',
-            'title': 'High Drawdown',
-            'text': f"Max drawdown ({metrics['max_drawdown_pct']:.1f}%) exceeds 20%. Consider reducing position size or adding drawdown limits."
+            'title': 'Drawdown Élevé',
+            'text': f"Le drawdown max ({metrics['max_drawdown_pct']:.1f}%) dépasse 20%. Envisagez de réduire la taille des positions ou d'ajouter des limites de drawdown."
         })
 
     # Sharpe analysis
     if metrics['sharpe_ratio'] < 1:
         recommendations.append({
             'type': 'warning',
-            'title': 'Low Risk-Adjusted Returns',
-            'text': f"Sharpe ratio ({metrics['sharpe_ratio']:.2f}) below 1 indicates suboptimal risk-adjusted returns."
+            'title': 'Rendements Ajustés au Risque Faibles',
+            'text': f"Le ratio de Sharpe ({metrics['sharpe_ratio']:.2f}) inférieur à 1 indique des rendements sous-optimaux ajustés au risque."
         })
 
     # Kelly criterion
     if metrics['kelly_criterion'] > 0.25:
         recommendations.append({
             'type': 'info',
-            'title': 'Position Sizing',
-            'text': f"Kelly criterion suggests {metrics['kelly_criterion']*100:.1f}% risk per trade. Use half-Kelly ({metrics['kelly_criterion']*50:.1f}%) for safety."
+            'title': 'Dimensionnement des Positions',
+            'text': f"Le critère de Kelly suggère {metrics['kelly_criterion']*100:.1f}% de risque par trade. Utilisez le demi-Kelly ({metrics['kelly_criterion']*50:.1f}%) pour plus de sécurité."
         })
 
     # Consecutive losses
     if metrics['consecutive_losses'] > 5:
         recommendations.append({
             'type': 'warning',
-            'title': 'Losing Streaks',
-            'text': f"Maximum {metrics['consecutive_losses']} consecutive losses detected. Ensure your position sizing can handle extended drawdowns."
+            'title': 'Séries Perdantes',
+            'text': f"Maximum {metrics['consecutive_losses']} pertes consécutives détectées. Assurez-vous que votre gestion de position peut gérer des drawdowns prolongés."
         })
 
     # Display recommendations
@@ -749,14 +749,14 @@ def main():
             st.info(f"**{rec['title']}**: {rec['text']}")
 
     if not recommendations:
-        st.success("✅ Your EA shows solid performance metrics! Continue monitoring and consider forward testing.")
+        st.success("✅ Votre EA montre de solides métriques de performance! Continuez à surveiller et envisagez le forward testing.")
 
     # Footer
     st.markdown("---")
     st.markdown("""
     <div style="text-align: center; color: #6b7280; padding: 20px;">
-        <p>MQL5 Trading Analytics Dashboard | Professional Wall Street Grade Analysis</p>
-        <p style="font-size: 0.75rem;">Built for quantitative traders and EA developers</p>
+        <p>MQL5 Trading Analytics Dashboard | Analyse Professionnelle Wall Street</p>
+        <p style="font-size: 0.75rem;">Conçu pour les traders quantitatifs et développeurs d'EA</p>
     </div>
     """, unsafe_allow_html=True)
 
