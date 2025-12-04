@@ -44,22 +44,31 @@ class MQL5DataLoader:
         self.detected_format: str = "unknown"
         self.column_mapping: Dict[str, str] = {}
 
-    def load_csv(self, file_path: str, encoding: str = 'utf-8',
+    def load_csv(self, file_source, encoding: str = 'utf-8',
                  delimiter: str = None, skip_rows: int = 0) -> pd.DataFrame:
         """
         Load CSV file with automatic format detection
+        Accepts either a file path (str) or a file-like object (e.g., Streamlit UploadedFile)
         """
-        path = Path(file_path)
-        if not path.exists():
-            raise FileNotFoundError(f"File not found: {file_path}")
+        # Check if it's a file path or file-like object
+        is_file_path = isinstance(file_source, (str, Path))
+
+        if is_file_path:
+            path = Path(file_source)
+            if not path.exists():
+                raise FileNotFoundError(f"File not found: {file_source}")
 
         # Try different delimiters if not specified
         delimiters = [delimiter] if delimiter else [',', ';', '\t', '|']
 
         for delim in delimiters:
             try:
+                # Reset file position for file-like objects
+                if not is_file_path and hasattr(file_source, 'seek'):
+                    file_source.seek(0)
+
                 df = pd.read_csv(
-                    file_path,
+                    file_source,
                     delimiter=delim,
                     encoding=encoding,
                     skiprows=skip_rows,
@@ -79,7 +88,11 @@ class MQL5DataLoader:
         # Try alternative encodings
         for enc in ['latin-1', 'iso-8859-1', 'cp1252']:
             try:
-                df = pd.read_csv(file_path, encoding=enc, on_bad_lines='skip')
+                # Reset file position for file-like objects
+                if not is_file_path and hasattr(file_source, 'seek'):
+                    file_source.seek(0)
+
+                df = pd.read_csv(file_source, encoding=enc, on_bad_lines='skip')
                 if len(df.columns) > 1:
                     self.raw_data = df
                     self._detect_and_map_columns()
