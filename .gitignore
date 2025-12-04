@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Data (keep sample, ignore user data)
+data/*.csv
+!data/sample_trades.csv
+
+# Logs
+*.log
+
+# Distribution
+dist/
+build/
+*.egg-info/
