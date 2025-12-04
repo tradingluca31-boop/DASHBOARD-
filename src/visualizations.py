@@ -38,13 +38,13 @@ LAYOUT_TEMPLATE = {
         'gridcolor': COLORS['grid'],
         'zerolinecolor': COLORS['grid'],
         'tickfont': {'color': COLORS['text_secondary']},
-        'titlefont': {'color': COLORS['text_secondary']}
+        'title': {'font': {'color': COLORS['text_secondary']}}
     },
     'yaxis': {
         'gridcolor': COLORS['grid'],
         'zerolinecolor': COLORS['grid'],
         'tickfont': {'color': COLORS['text_secondary']},
-        'titlefont': {'color': COLORS['text_secondary']}
+        'title': {'font': {'color': COLORS['text_secondary']}}
     },
     'margin': {'l': 60, 'r': 30, 't': 50, 'b': 50},
 }
