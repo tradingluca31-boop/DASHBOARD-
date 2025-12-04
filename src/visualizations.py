@@ -207,8 +207,7 @@ def create_monthly_returns_heatmap(df: pd.DataFrame) -> go.Figure:
         hovertemplate='<b>%{y} %{x}</b><br>P/L: $%{z:,.2f}<extra></extra>',
         showscale=True,
         colorbar=dict(
-            title='P/L ($)',
-            titlefont=dict(color=COLORS['text_secondary']),
+            title=dict(text='P/L ($)', font=dict(color=COLORS['text_secondary'])),
             tickfont=dict(color=COLORS['text_secondary'])
         )
     ))
@@ -250,8 +249,7 @@ def create_hourly_performance(df: pd.DataFrame) -> go.Figure:
         hovertemplate='<b>%{y} %{x}</b><br>P/L: $%{z:,.2f}<extra></extra>',
         showscale=True,
         colorbar=dict(
-            title='P/L ($)',
-            titlefont=dict(color=COLORS['text_secondary']),
+            title=dict(text='P/L ($)', font=dict(color=COLORS['text_secondary'])),
             tickfont=dict(color=COLORS['text_secondary'])
         )
     ))
