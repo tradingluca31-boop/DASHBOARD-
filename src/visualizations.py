@@ -53,8 +53,10 @@ LAYOUT_TEMPLATE = {
 def apply_layout(fig: go.Figure, title: str = "", height: int = 400) -> go.Figure:
     """Apply professional layout to figure"""
     fig.update_layout(
-        **LAYOUT_TEMPLATE,
-        title=dict(text=title, font=dict(size=16, color=COLORS['text_primary'])),
+        paper_bgcolor=COLORS['bg_card'],
+        plot_bgcolor=COLORS['bg_card'],
+        font=dict(family='Inter, SF Pro Display, -apple-system, sans-serif', color=COLORS['text_primary']),
+        title=title,
         height=height,
         showlegend=True,
         legend=dict(
